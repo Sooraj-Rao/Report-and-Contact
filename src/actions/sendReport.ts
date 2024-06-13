@@ -1,12 +1,28 @@
 "use server";
-import { EmailTemplate } from "@/components/component/email-template";
+import {
+  EmailTemplate,
+  EmailTemplateProps,
+} from "@/components/component/email-template";
 import { Resend } from "resend";
 
-export const SendReport = async ({ downloadURL, Inputdata }) => {
+interface SendReportProps {
+  downloadURL: string;
+  Inputdata: EmailTemplateProps;
+}
+
+interface SendReportResponse {
+  error: boolean | string;
+  data: any | null;
+}
+
+export const SendReport = async ({
+  downloadURL,
+  Inputdata,
+}: SendReportProps): Promise<SendReportResponse> => {
   try {
     const resend = new Resend(process.env.NEXT_PUBLIC_SENDREPORT_API);
 
-    const name = Inputdata?.email.match(/^[^@]+/)[0].replace(/\d+/g, "");
+    const name = Inputdata.email.match(/^[^@]+/)![0].replace(/\d+/g, "");
     if (downloadURL) Inputdata.url = downloadURL;
     Inputdata.name = name;
 
@@ -23,5 +39,6 @@ export const SendReport = async ({ downloadURL, Inputdata }) => {
     }
   } catch (error) {
     console.log(error);
+    return { error: "Unexpected error occurred", data: null };
   }
 };

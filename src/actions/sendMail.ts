@@ -1,8 +1,18 @@
 "use server";
-import { EmailTemplate } from "@/components/component/email-template";
+import {
+  EmailTemplate,
+  EmailTemplateProps,
+} from "@/components/component/email-template";
 import { Resend } from "resend";
 
-export const SendMail = async (props) => {
+interface SendMailResponse {
+  error: boolean | string;
+  data: any | null;
+}
+
+export const SendMail = async (
+  props: EmailTemplateProps
+): Promise<SendMailResponse> => {
   try {
     const resend = new Resend(process.env.NEXT_PUBLIC_SEND_API);
     const { data, error } = await resend.emails.send({
@@ -18,5 +28,6 @@ export const SendMail = async (props) => {
     }
   } catch (error) {
     console.log(error);
+    return { error: "Unexpected error occurred", data: null };
   }
 };

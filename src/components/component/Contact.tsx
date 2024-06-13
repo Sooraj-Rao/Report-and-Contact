@@ -9,7 +9,6 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card";
-import axios from "axios";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,43 +23,45 @@ const contactSchema = z.object({
   message: z.string().min(20, "Message is required"),
 });
 
+type ContactFormData = z.infer<typeof contactSchema>;
+
 export function Contact() {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
   });
 
-  const [loader, setloader] = useState(false);
+  const [loader, setLoader] = useState(false);
   const { toast } = useToast();
 
-  const onSubmit = async (Inputdata) => {
+  const onSubmit = async (Inputdata: ContactFormData) => {
     try {
-      setloader(true);
+      setLoader(true);
       const { error } = await SendMail(Inputdata);
-      if (error)
-        return toast({
+      if (error) {
+        toast({
           title: "Message Not Sent",
           description: "An error occurred. Please try again later.",
         });
-
-      if (!error) {
-        toast({
-          title: "Message Sent",
-          description: "Thank you for reaching out!",
-        });
-        reset();
+        return;
       }
+
+      toast({
+        title: "Message Sent",
+        description: "Thank you for reaching out!",
+      });
+      reset();
     } catch (error) {
-      return toast({
+      toast({
         title: "Message Not Sent",
         description: "An error occurred. Please try again later.",
       });
     } finally {
-      setloader(false);
+      setLoader(false);
     }
   };
 
@@ -69,8 +70,7 @@ export function Contact() {
       <CardHeader>
         <CardTitle>Get in touch</CardTitle>
         <CardDescription>
-          Have a question or want to work together? Fill out the form below and
-          we'll get back to you as soon as possible.
+          Have a question? Submit your inquiry, and we&apos;ll reply promptly.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -125,7 +125,7 @@ export function Contact() {
             {loader ? (
               <>
                 Sending
-                <span className=" h-4 w-4 ml-2 rounded-full border-[3px] border-t-transparent animate-spin"></span>
+                <span className="h-4 w-4 ml-2 rounded-full border-[3px] border-t-transparent animate-spin"></span>
               </>
             ) : (
               "Submit"

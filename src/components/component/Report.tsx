@@ -31,7 +31,6 @@ import {
 import { app } from "@/lib/firebase";
 import { useToast } from "../ui/use-toast";
 import { File, X } from "lucide-react";
-import { TooltipWrap } from "../ui/tooltip-provider";
 import { SendReport } from "@/actions/sendReport";
 
 const formSchema = z.object({
@@ -41,11 +40,12 @@ const formSchema = z.object({
   message: z.string().nonempty("Message is required."),
 });
 
+const sites = ["Linkhub", "QuickLink", "QuickSend"];
+
 export function Report() {
-  const sites = ["Linkhub", "QuickLink", "QuickSend"];
   const { toast } = useToast();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [loader, setLoader] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // State for selected file
+  const [loader, setLoader] = useState(false); // State for loader
   const storage = getStorage(app);
 
   const {
@@ -58,13 +58,14 @@ export function Report() {
     resolver: zodResolver(formSchema),
   });
 
-  const UploadFile = async (file, Inputdata) => {
+  const uploadFile = async (file: File, inputData: any) => {
     try {
       const metadata = {
         contentType: file.type,
       };
       const storageRef = ref(storage, "file-upload/" + file?.name);
       const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -72,17 +73,16 @@ export function Report() {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log(progress);
         },
-
         () => {
           setSelectedFile(null);
-          return toast({
+          toast({
             variant: "destructive",
             description: "Upload failed",
           });
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            handleSendReport(Inputdata, downloadURL);
+            handleSendReport(inputData, downloadURL);
           });
         }
       );
@@ -94,14 +94,11 @@ export function Report() {
     }
   };
 
-  const handleSendReport = async (Inputdata, downloadURL) => {
+  const handleSendReport = async (inputData: any, downloadURL: string) => {
     try {
-      let Data;
       setLoader(true);
-      if (!downloadURL) Data = { Inputdata };
-      else Data = { Inputdata, downloadURL };
       const { error, data } = await SendReport({
-        Inputdata,
+        inputData,
         downloadURL,
       });
       if (!error) {
@@ -110,15 +107,15 @@ export function Report() {
           title: "Message Sent",
           description: "Thank you for reaching out!",
         });
-      } else
+      } else {
         toast({
           variant: "destructive",
           title: "Message Not Sent",
           description: "An error occurred. Please try again later.",
         });
+      }
     } catch (error) {
       console.log(error);
-
       toast({
         variant: "destructive",
         title: "Message Not Sent",
@@ -130,17 +127,18 @@ export function Report() {
     }
   };
 
-  const onSubmit = async (data) => {
+  // Submit handler for the form
+  const onSubmit = async (data: any) => {
     setLoader(true);
-    if (selectedFile) UploadFile(selectedFile, data);
-    else {
-      let url = null;
-      handleSendReport(data, url);
+    if (selectedFile) {
+      await uploadFile(selectedFile, data);
+    } else {
+      await handleSendReport(data, null);
     }
   };
 
   return (
-    <Card className="w-full max-w-2xl ">
+    <Card className="w-full max-w-2xl">
       <CardHeader>
         <CardTitle>Report an Issue</CardTitle>
         <CardDescription>
@@ -200,7 +198,7 @@ export function Report() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2   gap-4 ">
+          <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -215,17 +213,17 @@ export function Report() {
                 </span>
               )}
             </div>
-            <div className="">
+            <div>
               <Label htmlFor="image">Attach Image (optional)</Label>
-              <div className="flex items-center    w-full">
+              <div className="flex items-center w-full">
                 <label
-                  className={`flex items-center px-4 text-sm w-full   rounded-md h-10 border ${
+                  className={`flex items-center px-4 text-sm w-full rounded-md h-10 border ${
                     selectedFile ? "hidden" : "block"
                   }`}
                 >
                   <CiImageOn size={24} />
                   <span className="ml-1 mr-3">Choose file</span>
-                  <span className=" text-[12px]">(size upto 2 mb)</span>
+                  <span className="text-[12px]">(up to 2 MB)</span>
                   <input
                     onChange={(e) => {
                       const { files } = e.target;
@@ -239,13 +237,13 @@ export function Report() {
                   />
                 </label>
                 <div
-                  className={`flex items-center mt-1 gap-x-5 justify-start w-full 
-              ${!selectedFile ? "hidden" : "block"}
-              `}
+                  className={`flex items-center mt-1 gap-x-5 justify-start w-full ${
+                    !selectedFile ? "hidden" : "block"
+                  }`}
                 >
                   <Button
                     type="button"
-                    className={` pointer-events-none rounded-xl h-7 py-0`}
+                    className="pointer-events-none rounded-xl h-7 py-0"
                   >
                     {selectedFile?.name}
                   </Button>
@@ -266,6 +264,7 @@ export function Report() {
               </div>
             </div>
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="message">Message</Label>
             <Textarea
@@ -279,12 +278,17 @@ export function Report() {
               </span>
             )}
           </div>
-          <div className=" text-center">
-            <Button className="justify-center w-fit " type="submit">
+
+          <div className="text-center">
+            <Button
+              className="justify-center w-fit"
+              type="submit"
+              disabled={loader}
+            >
               {loader ? (
                 <>
                   Reporting Issue
-                  <h1 className=" h-4 ml-2 w-4 rounded-full animate-spin border-2 border-t-transparent"></h1>
+                  <h1 className="h-4 ml-2 w-4 rounded-full animate-spin border-2 border-t-transparent"></h1>
                 </>
               ) : (
                 "Submit"

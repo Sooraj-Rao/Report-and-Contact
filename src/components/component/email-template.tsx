@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import * as React from "react";
 
-interface EmailTemplateProps {
+export interface EmailTemplateProps {
   name: string;
   email: string;
   message: string;
