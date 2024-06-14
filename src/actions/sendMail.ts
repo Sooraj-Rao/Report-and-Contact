@@ -6,8 +6,7 @@ import {
 import { Resend } from "resend";
 
 interface SendMailResponse {
-  error: boolean | string;
-  data: any | null;
+  error: boolean;
 }
 
 export const SendMail = async (
@@ -21,13 +20,14 @@ export const SendMail = async (
       subject: `${props?.name} sent a Contact-Form`,
       react: EmailTemplate(props),
     });
+
     if (error) {
-      return { error: "Send failed", data: null };
+      return { error: true };
     } else {
-      return { error: false, data };
+      return { error: false };
     }
   } catch (error) {
     console.log(error);
-    return { error: "Unexpected error occurred", data: null };
+    return { error: true };
   }
 };

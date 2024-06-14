@@ -8,10 +8,10 @@ import { MyData } from "@/lib/data";
 const Header = () => {
   return (
     <div className=" w-full flex justify-between items-center sm:px-20 px-3   py-4 ">
-      <div className=" flex flex-col  cursor-default">
+      <a href={MyData.site} target="_blank" className=" flex flex-col  cursor-default">
         <span className=" text-xl font-semibold">{MyData.name}</span>
         <span className=" text-xs">{MyData.about}</span>
-      </div>
+      </a>
       <div className=" flex justify-between  gap-x-2">
         <a target="_blank" href={MyData.github}>
           <Button title="Github" variant="ghost" className="  px-3">

@@ -29,8 +29,8 @@ export function Contact() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
+    formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
   });
@@ -66,9 +66,9 @@ export function Contact() {
   };
 
   return (
-    <Card className="w-full max-w-md my-10 ">
+    <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle>Get in touch</CardTitle>
+        <CardTitle>Get in touch </CardTitle>
         <CardDescription>
           Have a question? Submit your inquiry, and we&apos;ll reply promptly.
         </CardDescription>
@@ -117,20 +117,22 @@ export function Contact() {
               </span>
             )}
           </div>
-          <Button
-            disabled={loader}
-            className="justify-center disabled:opacity-80 disabled:cursor-not-allowed "
-            type="submit"
-          >
-            {loader ? (
-              <>
-                Sending
-                <span className="h-4 w-4 ml-2 rounded-full border-[3px] border-t-transparent animate-spin"></span>
-              </>
-            ) : (
-              "Submit"
-            )}
-          </Button>
+          <div className=" text-center">
+            <Button
+              disabled={loader}
+              className="justify-center w-fit disabled:opacity-80 disabled:cursor-not-allowed "
+              type="submit"
+            >
+              {loader ? (
+                <>
+                  Sending
+                  <span className="h-4 w-4 ml-2 rounded-full border-[3px] border-t-transparent animate-spin"></span>
+                </>
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

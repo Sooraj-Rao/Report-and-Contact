@@ -2,7 +2,7 @@
 import * as React from "react";
 
 export interface EmailTemplateProps {
-  name: string;
+  name?: string;
   email: string;
   message: string;
   site?: string;

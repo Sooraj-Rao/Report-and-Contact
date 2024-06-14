@@ -1,8 +1,8 @@
 "use client";
 
-import { Contact } from "@/components/component/Contact";
-import Header from "@/components/component/Header";
-import { Report } from "@/components/component/Report";
+import { Contact } from "@/components/component/contact";
+import Header from "@/components/component/header";
+import { Report } from "@/components/component/report";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <div
       className="  h-screen
-    bg-gradient-to-r from-rose-100 to-teal-50
-    dark:bg-gradient-to-r dark:from-gray-900 dark:to-zinc-950
+    bg-gradient-to-r from-rose-100 to-blue-100
+    dark:bg-gradient-to-b dark:from-slate-900 dark:to-gray-950
     "
     >
       <Header />

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -32,6 +32,7 @@ import { app } from "@/lib/firebase";
 import { useToast } from "../ui/use-toast";
 import { File, X } from "lucide-react";
 import { SendReport } from "@/actions/sendReport";
+import { EmailTemplateProps } from "./email-template";
 
 const formSchema = z.object({
   site: z.string().nonempty("Please select a site."),
@@ -41,11 +42,21 @@ const formSchema = z.object({
 });
 
 const sites = ["Linkhub", "QuickLink", "QuickSend"];
+const issues = ["Bug", "Support", "Feature Request", "Other"];
+
+type FormData = {
+  name?: string;
+  email: string;
+  message: string;
+  site: string;
+  issueType: string;
+  image?: File | null;
+};
 
 export function Report() {
   const { toast } = useToast();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // State for selected file
-  const [loader, setLoader] = useState(false); // State for loader
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loader, setLoader] = useState(false);
   const storage = getStorage(app);
 
   const {
@@ -54,11 +65,11 @@ export function Report() {
     setValue,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
 
-  const uploadFile = async (file: File, inputData: any) => {
+  const uploadFile = async (file: File, inputData: FormData) => {
     try {
       const metadata = {
         contentType: file.type,
@@ -71,7 +82,6 @@ export function Report() {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
         },
         () => {
           setSelectedFile(null);
@@ -94,13 +104,15 @@ export function Report() {
     }
   };
 
-  const handleSendReport = async (inputData: any, downloadURL: string) => {
+  const handleSendReport = async (inputData: FormData, downloadURL: string) => {
     try {
       setLoader(true);
-      const { error, data } = await SendReport({
-        inputData,
-        downloadURL,
-      });
+      const Inputdata: EmailTemplateProps = {
+        ...inputData,
+        url: downloadURL,
+      };
+
+      const { error } = await SendReport(Inputdata);
       if (!error) {
         reset();
         toast({
@@ -115,7 +127,6 @@ export function Report() {
         });
       }
     } catch (error) {
-      console.log(error);
       toast({
         variant: "destructive",
         title: "Message Not Sent",
@@ -127,13 +138,12 @@ export function Report() {
     }
   };
 
-  // Submit handler for the form
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<FormData> = (inputData) => {
     setLoader(true);
     if (selectedFile) {
-      await uploadFile(selectedFile, data);
+      uploadFile(selectedFile, inputData);
     } else {
-      await handleSendReport(data, null);
+      handleSendReport(inputData, "");
     }
   };
 
@@ -150,12 +160,8 @@ export function Report() {
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="site">Website</Label>
-              <Select
-                id="site"
-                {...register("site")}
-                onValueChange={(value) => setValue("site", value)}
-              >
-                <SelectTrigger className="w-full">
+              <Select onValueChange={(value) => setValue("site", value)}>
+                <SelectTrigger id="site" className="w-full">
                   <SelectValue placeholder="Select the site" />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,20 +180,16 @@ export function Report() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="issueType">Issue Type</Label>
-              <Select
-                id="issueType"
-                {...register("issueType")}
-                onValueChange={(value) => setValue("issueType", value)}
-              >
-                <SelectTrigger className="w-full">
+              <Select onValueChange={(value) => setValue("issueType", value)}>
+                <SelectTrigger id="issueType" className="w-full">
                   <SelectValue placeholder="Select issue type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="bug">Bug</SelectItem>
-                  <SelectItem value="feature-request">
-                    Feature Request
-                  </SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  {issues.map((item, i) => (
+                    <SelectItem key={i} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {errors.issueType && (
@@ -199,20 +201,6 @@ export function Report() {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="Enter your email"
-                type="email"
-                {...register("email")}
-              />
-              {errors.email && (
-                <span className="text-red-500 text-xs">
-                  {errors?.email?.message}
-                </span>
-              )}
-            </div>
             <div>
               <Label htmlFor="image">Attach Image (optional)</Label>
               <div className="flex items-center w-full">
@@ -263,6 +251,20 @@ export function Report() {
                 </div>
               </div>
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                placeholder="Enter your email"
+                type="email"
+                {...register("email")}
+              />
+              {errors.email && (
+                <span className="text-red-500 text-xs">
+                  {errors?.email?.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="grid gap-2">
@@ -278,23 +280,18 @@ export function Report() {
               </span>
             )}
           </div>
-
-          <div className="text-center">
-            <Button
-              className="justify-center w-fit"
-              type="submit"
-              disabled={loader}
-            >
-              {loader ? (
+            <div className=" text-center"> 
+          <Button className=" w-fit" type="submit" disabled={loader}>
+          {loader ? (
                 <>
-                  Reporting Issue
-                  <h1 className="h-4 ml-2 w-4 rounded-full animate-spin border-2 border-t-transparent"></h1>
+                  Submitting
+                  <span className="h-4 w-4 ml-2 rounded-full border-[3px] border-t-transparent animate-spin"></span>
                 </>
               ) : (
                 "Submit"
               )}
-            </Button>
-          </div>
+          </Button>
+            </div>
         </form>
       </CardContent>
     </Card>
