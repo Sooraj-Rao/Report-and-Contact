@@ -13,7 +13,7 @@ export default function Home() {
     <div
       className="  h-screen
     bg-gradient-to-r from-rose-100 to-blue-100
-    dark:bg-gradient-to-b dark:from-slate-900 dark:to-gray-950
+    dark:bg-gradient-to-r dark:from-slate-950 dark:to-gray-950
     "
     >
       <Header />

@@ -148,7 +148,7 @@ export function Report() {
   };
 
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-full max-w-2xl ">
       <CardHeader>
         <CardTitle>Report an Issue</CardTitle>
         <CardDescription>
@@ -200,12 +200,12 @@ export function Report() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="image">Attach Image (optional)</Label>
+          <div className="grid grid-cols-2 gap-4 ">
+            <div className="grid gap-2">
+              <Label htmlFor="image" className="  ">Attach Image (optional)</Label>
               <div className="flex items-center w-full">
                 <label
-                  className={`flex items-center px-4 text-sm w-full rounded-md h-10 border ${
+                  className={`flex dark:bg-slate-950  items-center px-4 text-sm w-full rounded-md h-10  border ${
                     selectedFile ? "hidden" : "block"
                   }`}
                 >
