@@ -15,7 +15,6 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
   const ref = useRef(false);
 
   const { mode, app, utm_source } = queryObject;
-console.log(queryObject)
   const Analyse = useCallback(async () => {
     const AnalyticsData: T_addAnalytics = { mode, app, utm_source };
     const res = await addAnalytics(AnalyticsData);
