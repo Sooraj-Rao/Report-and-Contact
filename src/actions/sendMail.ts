@@ -14,7 +14,7 @@ export const SendMail = async (
 ): Promise<SendMailResponse> => {
   try {
     const resend = new Resend(process.env.NEXT_PUBLIC_SEND_API);
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Contact-Me@resend.dev",
       to: ["soorajrao630@gmail.com"],
       subject: `${props?.name} sent a Contact-Form`,

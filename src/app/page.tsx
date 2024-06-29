@@ -1,19 +1,47 @@
 "use client";
 
+import { T_addAnalytics, addAnalytics } from "@/actions/analytics";
 import { Contact } from "@/components/component/contact";
-import Header from "@/components/component/header";
+import Header, { SocialLinks } from "@/components/component/header";
 import { Report } from "@/components/component/report";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useCallback, useState } from "react";
+import { useCookies } from "react-cookie";
 
 export default function Home() {
   const [isReport, setisReport] = useState(false);
+  const [cookies, setCookie] = useCookies(["auth_token"]);
+  const param = useSearchParams();
+  const ref = useRef(false);
+  const mode = param.get("mode");
+  const app = param.get("app");
+  const utm_source = param.get("utm_source");
+
+  const Analyse = useCallback(async () => {
+    const AnalyticsData: T_addAnalytics = { mode, app, utm_source };
+    const res = await addAnalytics(AnalyticsData);
+    if (res) {
+      setCookie("auth_token", "k9I6ZjB9s41-tL7I/AC7Gup5kQIBanmmap");
+    }
+  }, [setCookie, mode, app, utm_source]);
+
+  useEffect(() => {
+    if (!cookies.auth_token && !ref.current) {
+      ref.current = true;
+      Analyse();
+    }
+    if (mode == "report") {
+      setisReport(true);
+    }
+  }, [mode, cookies.auth_token, Analyse]);
 
   return (
     <div
       className="  h-screen
-    bg-gradient-to-r from-rose-100 to-blue-100
+    sm:bg-gradient-to-r sm:from-rose-100 sm:to-blue-100
     dark:bg-gradient-to-r dark:from-slate-950 dark:to-gray-950
+    bg-gradient-to-r from-rose-50 to-blue-50
     "
     >
       <Header />

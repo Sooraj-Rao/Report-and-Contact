@@ -66,22 +66,23 @@ export function Contact() {
   };
 
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-full max-w-2xl sm:mx-0 mx-2">
       <CardHeader>
         <CardTitle>Get in touch </CardTitle>
         <CardDescription>
-          Have a question? Submit your inquiry, and we&apos;ll reply promptly.
+          Have a question? Submit your inquiry, and I&apos;ll reply promptly.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2  gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name" className=" text-xs sm:text-sm">Name</Label>
               <Input
                 id="name"
                 placeholder="Enter your name"
                 {...register("name")}
+                className=" placeholder:sm:text-sm placeholder:text-xs"
               />
               {errors.name && (
                 <span className="text-red-500 text-xs">
@@ -90,11 +91,12 @@ export function Contact() {
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className=" text-xs sm:text-sm">Email</Label>
               <Input
                 id="email"
                 placeholder="Enter your email"
                 type="email"
+                className=" placeholder:sm:text-sm placeholder:text-xs"
                 {...register("email")}
               />
               {errors.email && (
@@ -105,11 +107,12 @@ export function Contact() {
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="message">Message</Label>
+            <Label htmlFor="message" className=" text-xs sm:text-sm">Message</Label>
             <Textarea
               id="message"
               placeholder="Enter the message"
               {...register("message")}
+              className=" placeholder:sm:text-sm placeholder:text-xs"
             />
             {errors.message && (
               <span className="text-red-500 text-xs">
