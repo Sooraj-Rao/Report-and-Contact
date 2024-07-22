@@ -55,6 +55,7 @@ export function Report() {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -79,6 +80,10 @@ export function Report() {
         setValue("image", file);
       }
     } else {
+      toast({
+        variant: "destructive",
+        description: "Failed..Please refresh page and try again.",
+      });
       setSelectedFile(null);
       setValue("image", null);
     }
@@ -122,8 +127,10 @@ export function Report() {
   const handleSendReport = async (inputData: FormData, downloadURL: string) => {
     try {
       setLoader(true);
+      const { image, ...inputDataWithoutImage } = inputData;
+
       const Inputdata: EmailTemplateProps = {
-        ...inputData,
+        ...inputDataWithoutImage,
         url: downloadURL,
       };
 
@@ -133,6 +140,8 @@ export function Report() {
           title: "Message Sent",
           description: "Thank you for reaching out!",
         });
+        setSelectedFile(null);
+        reset();
       } else {
         toast({
           variant: "destructive",
@@ -141,6 +150,7 @@ export function Report() {
         });
       }
     } catch (error) {
+      console.log(error);
       toast({
         variant: "destructive",
         title: "Message Not Sent",
@@ -148,7 +158,6 @@ export function Report() {
       });
     } finally {
       setLoader(false);
-      setSelectedFile(null);
     }
   };
 

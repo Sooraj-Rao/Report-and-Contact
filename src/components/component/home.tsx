@@ -15,6 +15,7 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
   const ref = useRef(false);
 
   const { mode, app, utm_source } = queryObject;
+  
   const Analyse = useCallback(async () => {
     const AnalyticsData: T_addAnalytics = { mode, app, utm_source };
     const res = await addAnalytics(AnalyticsData);
@@ -36,7 +37,7 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
   return (
     <div
       className="  h-screen
-    sm:bg-gradient-to-r sm:from-rose-100 sm:to-blue-100
+    
     dark:bg-gradient-to-r dark:from-slate-950 dark:to-gray-950
     bg-gradient-to-r from-rose-50 to-blue-50
     "
@@ -50,7 +51,7 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
             ${
               !isReport
                 ? "bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
-                : "bg-gray-100 text-gray-900 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80"
+                : "bg-black/5 text-gray-900 hover:bg-black/10 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80"
             }`}
           >
             Get in Touch
@@ -61,7 +62,7 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
             ${
               isReport
                 ? "bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
-                : "bg-gray-100 text-gray-900 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80"
+                : "bg-black/5 text-gray-900 hover:bg-black/10 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80"
             }
             `}
           >
