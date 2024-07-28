@@ -32,7 +32,7 @@ import { X } from "lucide-react";
 import { SendReport } from "@/actions/sendReport";
 import { EmailTemplateProps } from "./email-template";
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 type FormData = {
   email: string;
@@ -42,7 +42,7 @@ type FormData = {
   image?: File | null;
 };
 
-const sites = ["Linkhub", "QuickLink", "QuickSend"];
+const sites = ["Linkhub", "QuickLink", "QuickSend", "NextLink"];
 const issues = ["Bug", "Support", "Feature Request", "Other"];
 
 export function Report() {
@@ -171,7 +171,7 @@ export function Report() {
   };
 
   return (
-    <Card className="w-full max-w-2xl sm:mx-0 mx-2">
+    <Card className="w-full max-w-2xl sm:mx-0 mx-2 -mt-8 sm:mt-0">
       <CardHeader>
         <CardTitle>Report an Issue</CardTitle>
         <CardDescription>
@@ -182,7 +182,7 @@ export function Report() {
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email" className="text-xs sm:text-sm">
+              <Label htmlFor="email" className="text-sm">
                 Email
               </Label>
               <Input
@@ -196,7 +196,7 @@ export function Report() {
                     message: "Invalid email address",
                   },
                 })}
-                className="placeholder:sm:text-sm placeholder:text-xs"
+                className="placeholder:text-sm text-sm"
               />
               {errors.email && (
                 <span className="text-red-500 text-xs">
@@ -205,10 +205,7 @@ export function Report() {
               )}
             </div>
             <div className="grid gap-2">
-              <Label
-                htmlFor="image"
-                className="text-xs flex gap-x-1 sm:text-sm"
-              >
+              <Label htmlFor="image" className="flex gap-x-1 text-sm">
                 Attach Image
                 <span className="sm:block hidden">(optional)</span>
               </Label>
@@ -219,10 +216,8 @@ export function Report() {
                   }`}
                 >
                   <CiImageOn size={24} />
-                  <span className="ml-1 mr-3 text-xs sm:text-sm">
-                    Choose file
-                  </span>
-                  <span className="text-[12px] hidden sm:block">
+                  <span className="ml-1 mr-3 text-sm">Choose file</span>
+                  <span className="text-[12px] text-foreground/70 sm:block">
                     (up to 2 MB)
                   </span>
                   <input
@@ -287,7 +282,7 @@ export function Report() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="site" className="text-xs sm:text-sm">
+              <Label htmlFor="site" className="text-sm">
                 Website
               </Label>
               <Select
@@ -314,7 +309,7 @@ export function Report() {
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="issueType" className="text-xs sm:text-sm">
+              <Label htmlFor="issueType" className="text-sm">
                 Issue Type
               </Label>
               <Select
@@ -342,12 +337,12 @@ export function Report() {
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="message" className="text-xs sm:text-sm">
+            <Label htmlFor="message" className="text-sm">
               Message
             </Label>
             <Textarea
               id="message"
-              className="placeholder:sm:text-sm placeholder:text-xs"
+              className="text-sm placeholder:text-sm"
               placeholder="Tell us about the issue"
               {...register("message", {
                 required: "Message is required.",

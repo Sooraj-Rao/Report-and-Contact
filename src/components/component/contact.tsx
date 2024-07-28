@@ -77,12 +77,12 @@ export function Contact() {
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid sm:grid-cols-2  gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="name" className=" text-xs sm:text-sm">Name</Label>
+              <Label htmlFor="name" className=" text-sm">Name</Label>
               <Input
                 id="name"
                 placeholder="Enter your name"
                 {...register("name")}
-                className=" placeholder:sm:text-sm placeholder:text-xs"
+                className=" placeholder:text-sm  text-sm"
               />
               {errors.name && (
                 <span className="text-red-500 text-xs">
@@ -91,12 +91,12 @@ export function Contact() {
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email" className=" text-xs sm:text-sm">Email</Label>
+              <Label htmlFor="email" className=" text-sm">Email</Label>
               <Input
                 id="email"
                 placeholder="Enter your email"
                 type="email"
-                className=" placeholder:sm:text-sm placeholder:text-xs"
+                className=" placeholder:text-sm  text-sm"
                 {...register("email")}
               />
               {errors.email && (
@@ -107,12 +107,12 @@ export function Contact() {
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="message" className=" text-xs sm:text-sm">Message</Label>
+            <Label htmlFor="message" className=" text-sm">Message</Label>
             <Textarea
               id="message"
               placeholder="Enter the message"
               {...register("message")}
-              className=" placeholder:sm:text-sm placeholder:text-xs"
+              className=" placeholder:text-sm  text-sm"
             />
             {errors.message && (
               <span className="text-red-500 text-xs">

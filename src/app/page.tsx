@@ -2,6 +2,8 @@
 
 import { T_addAnalytics } from "@/actions/analytics";
 import Home from "@/components/component/home";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import React, { Suspense, useEffect, useState } from "react";
 
 const MainPage = () => {

@@ -2,12 +2,14 @@
 
 import { T_addAnalytics, addAnalytics } from "@/actions/analytics";
 import { Contact } from "@/components/component/contact";
-import Header, { SocialLinks } from "@/components/component/header";
+import Header from "@/components/component/header";
 import { Report } from "@/components/component/report";
-import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
+
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useCookies } from "react-cookie";
+import { Button } from "../ui/button";
+import { ArrowLeft } from "lucide-react";
+import { MyData } from "@/lib/data";
 
 export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
   const [isReport, setisReport] = useState(false);
@@ -15,7 +17,7 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
   const ref = useRef(false);
 
   const { mode, app, utm_source } = queryObject;
-  
+
   const Analyse = useCallback(async () => {
     const AnalyticsData: T_addAnalytics = { mode, app, utm_source };
     const res = await addAnalytics(AnalyticsData);
@@ -43,35 +45,17 @@ export default function Home({ queryObject }: { queryObject: T_addAnalytics }) {
     "
     >
       <Header />
-      <div className=" flex justify-center gap-x-10 my-5">
-        <div className="flex items-center space-x-4">
-          <Button
-            onClick={() => setisReport(false)}
-            className={`px-4 py-2 rounded-md transition-color
-            ${
-              !isReport
-                ? "bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
-                : "bg-black/5 text-gray-900 hover:bg-black/10 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80"
-            }`}
-          >
-            Get in Touch
-          </Button>
-          <Button
-            onClick={() => setisReport(true)}
-            className={`px-4 py-2 rounded-md transition-colors
-            ${
-              isReport
-                ? "bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
-                : "bg-black/5 text-gray-900 hover:bg-black/10 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80"
-            }
-            `}
-          >
-            Report an Issue
-          </Button>
-        </div>
-      </div>
-      <div className="w-full  flex justify-center">
+
+      <div className="w-full  flex justify-center mt-10 ">
         {isReport ? <Report /> : <Contact />}
+        {utm_source === "main" && (
+          <a href={MyData.site} className="  fixed sm:bottom-8 bottom-2 left-2 sm:left-8">
+            <Button className="text-xs">
+              <ArrowLeft size={15} className=" mr-1" />
+              Back
+            </Button>
+          </a>
+        )}
       </div>
     </div>
   );

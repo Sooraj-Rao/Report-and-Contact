@@ -1,7 +1,5 @@
 export const MyData = {
   name: "Sooraj Rao",
-  about: "Web | Apps developer",
-  github: "https://github.com/Sooraj-Rao",
-  linkedin: "https://www.linkedin.com/in/sooraj-rao/",
+  about: "Web and Apps developer",
   site: "https://soorajrao.in/",
 };

@@ -12,6 +12,7 @@ export function ModeToggle() {
   return (
     <div>
       <Button
+        title={`${isDark ? "dark" : "light"}`}
         variant="ghost"
         onClick={() => (!isDark ? setTheme("dark") : setTheme("light"))}
       >
