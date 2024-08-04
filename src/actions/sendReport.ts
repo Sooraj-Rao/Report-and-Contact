@@ -19,8 +19,8 @@ export const SendReport = async (
     props.name = name;
 
     const { data, error } = await resend.emails.send({
-      from: "Report-Issue@resend.dev",
-      to: ["soorajrao630@gmail.com"],
+      from: process.env.NEXT_PUBLIC_SENDREPORT_FROM!,
+      to: [process.env.NEXT_PUBLIC_SEND_TO!],
       subject: `${name} has Reported Issue`,
       react: EmailTemplate(props),
     });

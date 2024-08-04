@@ -14,8 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SendMail } from "@/actions/sendMail";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "../ui/use-toast";
+import { MyData } from "@/lib/data";
 
 const contactSchema = z.object({
   name: z.string().min(5, "Name is required"),
@@ -30,13 +31,29 @@ export function Contact() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
+    defaultValues: {},
   });
 
   const [loader, setLoader] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email") || "";
+    const name = params.get("name") || "";
+    const utmSource = params.get("utm_source");
+
+    setValue("email", email);
+    setValue("name", name);
+
+    if (utmSource === MyData.request_domain_header) {
+      setValue("message", MyData.request_domain);
+    }
+  }, [setValue]);
 
   const onSubmit = async (Inputdata: ContactFormData) => {
     try {
@@ -75,14 +92,16 @@ export function Contact() {
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid sm:grid-cols-2  gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="name" className=" text-sm">Name</Label>
+              <Label htmlFor="name" className=" text-sm">
+                Name
+              </Label>
               <Input
                 id="name"
                 placeholder="Enter your name"
                 {...register("name")}
-                className=" placeholder:text-sm  text-sm"
+                className=" placeholder:text-sm text-sm"
               />
               {errors.name && (
                 <span className="text-red-500 text-xs">
@@ -91,12 +110,14 @@ export function Contact() {
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email" className=" text-sm">Email</Label>
+              <Label htmlFor="email" className=" text-sm">
+                Email
+              </Label>
               <Input
                 id="email"
                 placeholder="Enter your email"
                 type="email"
-                className=" placeholder:text-sm  text-sm"
+                className=" placeholder:text-sm text-sm"
                 {...register("email")}
               />
               {errors.email && (
@@ -107,12 +128,14 @@ export function Contact() {
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="message" className=" text-sm">Message</Label>
+            <Label htmlFor="message" className=" text-sm">
+              Message
+            </Label>
             <Textarea
               id="message"
               placeholder="Enter the message"
               {...register("message")}
-              className=" placeholder:text-sm  text-sm"
+              className=" placeholder:text-sm text-sm"
             />
             {errors.message && (
               <span className="text-red-500 text-xs">
