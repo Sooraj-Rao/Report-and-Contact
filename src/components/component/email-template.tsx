@@ -21,7 +21,7 @@ export const EmailTemplate = ({
   return (
     <div style={{ fontFamily: "Arial, sans-serif", lineHeight: "1.6" }}>
       <h3 style={{ color: "#333" }}>
-        {site ? "Reported Issue" : "Contact Form Submission"}
+        {site ? "Reported Issue" : "Contact Form"}
       </h3>
       <div style={{ fontSize: "14px" }}>
         <div>

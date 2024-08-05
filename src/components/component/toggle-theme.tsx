@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button";
 
 export function ModeToggle() {
   const { setTheme, theme } = useTheme();
-  const isDark = theme == "light" ? false : true;
+  const isDark = theme == "light";
   return (
     <div>
       <Button
-        title={`${isDark ? "dark" : "light"}`}
+        title={theme}
         variant="ghost"
         onClick={() => (!isDark ? setTheme("dark") : setTheme("light"))}
       >
