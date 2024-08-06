@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/button";
 
 export function ModeToggle() {
   const { setTheme, theme } = useTheme();
-  const isDark = theme == "light";
+  const isDark = theme == "dark";
   return (
     <div>
       <Button
         title={theme}
         variant="ghost"
-        onClick={() => (!isDark ? setTheme("dark") : setTheme("light"))}
+        onClick={() => (isDark ? setTheme("light") : setTheme("dark"))}
       >
         {isDark ? <MoonStar size={20} /> : <Sun size={20} />}
       </Button>
